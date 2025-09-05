@@ -46,6 +46,16 @@ See [values.yaml](./values.yaml) for configuration options.
 - Guacamole Daemon
 - MinIO Object Storage
 
+## Release Process
+
+```bash
+# Test everything locally
+./scripts/test.sh
+
+# Release a new version
+./scripts/release.sh 1.2.0
+```
+
 ## Links
 
 - [Chart Repository](https://browsersec.github.io/helm-charts)
