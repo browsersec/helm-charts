@@ -31,6 +31,60 @@ entries:
       category: Security
     apiVersion: v2
     appVersion: 1.0.0
+    created: "2025-09-05T20:37:40.870751477Z"
+    description: A Helm chart for KubeBrowse browser sandbox environment
+    digest: 3673cbae5ab44fc10add1634ec0dfe743a8e831bc6f95010015f7e22da5c7c89
+    home: https://github.com/browsersec/KubeBrowse
+    keywords:
+    - browser
+    - sandbox
+    - security
+    - remote-desktop
+    - guacamole
+    - isolation
+    - web-browser
+    maintainers:
+    - email: contact@browsersec.io
+      name: browsersec
+      url: https://github.com/browsersec/KubeBrowse
+    name: kubebrowse
+    sources:
+    - https://github.com/browsersec/helm-charts
+    - https://github.com/browsersec/KubeBrowse
+    type: application
+    urls:
+    - https://github.com/browsersec/helm-charts/releases/download/kubebrowse-1.7.0/kubebrowse-1.7.0.tgz
+    version: 1.7.0
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
+          description: Updated Helm chart with improved CI/CD workflows
+        - kind: added
+          description: Added comprehensive Artifact Hub integration
+        - kind: added
+          description: Improved chart validation and testing scripts
+        - kind: changed
+          description: Enhanced GitHub Actions workflows for better releases
+      artifacthub.io/containsSecurityUpdates: "false"
+      artifacthub.io/images: |
+        - name: guacamole-guacd
+          image: guacamole/guacd:1.6.0
+        - name: postgres
+          image: postgres:15-alpine
+        - name: redis
+          image: redis:bookworm
+        - name: minio
+          image: minio/minio:RELEASE.2025-07-23T15-54-02Z
+      artifacthub.io/license: MIT
+      artifacthub.io/links: "- name: Chart Source\n  url: https://github.com/browsersec/helm-charts\n-
+        name: KubeBrowse Project\n  url: https://github.com/browsersec/KubeBrowse\n-
+        name: Documentation\n  url: https://github.com/browsersec/KubeBrowse/blob/main/README.md\n
+        \ "
+      artifacthub.io/operator: "false"
+      artifacthub.io/prerelease: "false"
+      category: Security
+    apiVersion: v2
+    appVersion: 1.0.0
     created: "2025-09-05T20:03:49.432227502Z"
     description: A Helm chart for KubeBrowse browser sandbox environment
     digest: 37778f96346868d78a0b9bb92db9bcd86cc063c9983d3a4886c5b8a5fd537527
@@ -283,4 +337,4 @@ entries:
     urls:
     - https://github.com/browsersec/helm-charts/releases/download/kubebrowse-1.2.0/kubebrowse-1.2.0.tgz
     version: 1.2.0
-generated: "2025-09-05T20:03:49.432268148Z"
+generated: "2025-09-05T20:37:40.870777356Z"
