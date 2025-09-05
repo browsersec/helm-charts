@@ -1,6 +1,6 @@
 # KubeBrowse Helm Chart
 
-[![Release Charts](https://github.com/browsersec/helm-charts/actions/workflows/release.yml/badge.svg)](https://github.com/browsersec/helm-charts/actions/workflows/release.yml)
+[![Release Charts](https://github.com/browsersec/helm-charts/actions/workflows/release.yml/badge.svg)](https://github.com/browsersec/helm-charts/actions/workflows/release.yml) [![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/kubebrowse)](https://artifacthub.io/packages/search?repo=kubebrowse)
 
 A Helm chart for KubeBrowse, a secure browser sandbox environment that provides isolated browsing sessions in Kubernetes.
 
