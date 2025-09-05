@@ -39,12 +39,13 @@ See [values.yaml](./values.yaml) for configuration options.
 
 ## Components
 
-- API Backend (Ruby/Sinatra)
-- Frontend (React/Vue.js)
+- API Backend (Go)
+- Frontend (React.js)
 - PostgreSQL Database
 - Redis Cache
 - Guacamole Daemon
 - MinIO Object Storage
+- Jaeger Tracing (optional)
 
 ## Release Process
 
