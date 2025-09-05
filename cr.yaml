@@ -1,0 +1,6 @@
+# Chart releaser configuration
+owner: browsersec
+git-repo: helm-charts
+charts-repo: https://browsersec.github.io/helm-charts
+index-path: ./index.yaml
+packages-with-index: true

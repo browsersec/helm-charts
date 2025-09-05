@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: browser-sandbox-frontend
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: {{ .Values.frontend.replicas }}
+  selector:
+    matchLabels:
+      app: "browser-sandbox-frontend"
+  template:
+    metadata:
+      labels:
+        app: "browser-sandbox-frontend"
+    spec:
+      containers:
+        - name: frontend
+          image: {{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag }}
+          imagePullPolicy: {{ .Values.frontend.image.pullPolicy }}
+          ports:
+            - containerPort: 80
+          resources:
+            {{- toYaml .Values.frontend.resources | nindent 12 }}
+          env:
+            - name: VITE_GUAC_CLIENT_URL
+              value: "https://browser-sandbox-api.{{ .Values.namespace }}.svc.cluster.local:{{ .Values.api.service.port }}"
+            - name: GUAC_CLIENT_URL
+              value: "https://browser-sandbox-api.{{ .Values.namespace }}.svc.cluster.local:{{ .Values.api.service.port }}"
+            - name: CADDY_GUAC_CLIENT_URL
+              value: "https://browser-sandbox-api.{{ .Values.namespace }}.svc.cluster.local:{{ .Values.api.service.port }}"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: browser-sandbox-frontend
+  namespace: {{ .Values.namespace }}
+spec:
+  type: {{ .Values.frontend.service.type }}
+  ports:
+    - port: {{ .Values.frontend.service.port }}
+      targetPort: 80
+  selector:
+    app: "browser-sandbox-frontend"

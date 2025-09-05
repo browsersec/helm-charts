@@ -1,0 +1,12 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kubebrowse
+  namespace: argocd
+  annotations:
+    argocd-image-updater.argoproj.io/image-list: ghcr.io/browsersec/kubebrowse:~v, ghcr.io/browsersec/kubebrowse-frontend:~v
+    argocd-image-updater.argoproj.io/kubebrowse.update-strategy: semver
+    argocd-image-updater.argoproj.io/kubebrowse-frontend.update-strategy: semver
+    argocd-image-updater.argoproj.io/write-back-method: git:secret:argocd/github-repo-creds
+spec:
+  # ... same as previous ArgoCD application definition

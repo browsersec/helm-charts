@@ -1,0 +1,22 @@
+apiVersion: v2
+name: kubebrowse
+description: A Helm chart for KubeBrowse browser sandbox environment
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+home: https://github.com/browsersec/KubeBrowse
+sources:
+  - https://github.com/browsersec/helm-charts
+  - https://github.com/browsersec/KubeBrowse
+maintainers:
+  - name: browsersec
+    url: https://github.com/browsersec/KubeBrowse
+    email: contact@browsersec.io
+keywords:
+  - browser
+  - sandbox
+  - security
+  - remote-desktop
+  - guacamole
+annotations:
+  category: Security
