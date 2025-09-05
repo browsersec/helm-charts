@@ -38,15 +38,13 @@ annotations:
       description: Enhanced GitHub Actions workflows for better releases
   artifacthub.io/images: |
     - name: guacamole-guacd
-      image: guacamole/guacd:1.5.0
-    - name: guacamole-client
-      image: guacamole/guacamole:1.5.0
+      image: guacamole/guacd:1.6.0
     - name: postgres
-      image: postgres:15
+      image: postgres:15-alpine
     - name: redis
-      image: redis:7-alpine
+      image: redis:bookworm
     - name: minio
-      image: minio/minio:RELEASE.2023-09-04T19-57-37Z
+      image: minio/minio:RELEASE.2025-07-23T15-54-02Z
   artifacthub.io/links: |
     - name: Chart Source
       url: https://github.com/browsersec/helm-charts
