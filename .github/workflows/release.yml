@@ -36,8 +36,11 @@ jobs:
       - name: Lint Chart
         run: helm lint .
 
+      - name: Create packages directory
+        run: mkdir -p .cr-release-packages
+
       - name: Package Chart
-        run: helm package .
+        run: helm package . -d .cr-release-packages
 
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.6.0

@@ -4,3 +4,4 @@ git-repo: helm-charts
 charts-repo: https://browsersec.github.io/helm-charts
 index-path: ./index.yaml
 packages-with-index: true
+package-path: .cr-release-packages
