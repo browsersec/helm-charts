@@ -1,6 +1,14 @@
+# Example configuration for using an external database
+# Copy this file and modify it for your external database setup
+
 # Global settings
 namespace: browser-sandbox
-environment: development
+environment: production
+
+# Database configuration - Using external database
+database:
+  type: external
+  externalUrl: "postgres://myuser:mypassword@my-external-db.example.com:5432/mydatabase?sslmode=require"
 
 # API configuration
 api:
@@ -8,18 +16,17 @@ api:
     repository: ghcr.io/browsersec/kubebrowse
     tag: sha-09dfa1f
     pullPolicy: IfNotPresent
-  replicas: 1
+  replicas: 2
   resources:
     requests:
-      memory: "64Mi"
-      cpu: "100m"
-    limits:
       memory: "128Mi"
       cpu: "200m"
+    limits:
+      memory: "256Mi"
+      cpu: "400m"
   service:
-    type: NodePort
+    type: LoadBalancer
     port: 4567
-    nodePort: 30006
 
 # Frontend configuration
 frontend:
@@ -27,7 +34,7 @@ frontend:
     repository: ghcr.io/browsersec/kubebrowse-frontend
     tag: chore-improve-back
     pullPolicy: IfNotPresent
-  replicas: 2
+  replicas: 3
   resources:
     requests:
       memory: "128Mi"
@@ -38,33 +45,6 @@ frontend:
   service:
     type: LoadBalancer
     port: 80
-
-# Database configuration
-database:
-  # Set to 'internal' to use the internal PostgreSQL instance
-  # Set to 'external' to use an external database
-  type: external
-  # External database URL (used when type is 'external')
-  # Example: postgres://username:password@hostname:5432/database?sslmode=disable
-  externalUrl: "postgres://your_username:your_password@your_database_host:5432/your_database_name?sslmode=require"
-
-# PostgreSQL configuration (used when database.type is 'internal')
-postgres:
-  image:
-    repository: postgres
-    tag: "15"
-  resources:
-    requests:
-      memory: "256Mi"
-      cpu: "100m"
-    limits:
-      memory: "1Gi"
-      cpu: "500m"
-  storage: 10Gi
-  credentials:
-    username: postgresuser
-    password: postgrespassword
-    database: sandbox_db
 
 # Redis configuration
 redis:
@@ -106,7 +86,7 @@ minio:
     limits:
       memory: "512Mi"
       cpu: "300m"
-  storage: 10Gi
+  storage: 20Gi
   credentials:
     accessKey: minioaccesskey
     secretKey: miniosecretkey
@@ -114,32 +94,35 @@ minio:
 
 # Session configuration
 sessionTimeouts:
-  podSessionTimeout: 10
-  podSessionTTL: 6
+  podSessionTimeout: 15
+  podSessionTTL: 10
 
 # OAuth configuration
 oauth:
   github:
-    clientId: "client-id"
-    clientSecret: "client-secret"
-    callbackUrl: "https://localhost:4567/auth/oauth/github/callback"
+    clientId: "your-production-client-id"
+    clientSecret: "your-production-client-secret"
+    callbackUrl: "https://yourdomain.com/auth/oauth/github/callback"
 
 # SMTP configuration
 smtp:
-  host: "smtp.gmail.com"
+  host: "smtp.yourprovider.com"
   port: "587"
-  username: "example@gmail.com"
-  password: "yourpassword"
-  fromEmail: "example@gmail.com"
+  username: "your-smtp-user"
+  password: "your-smtp-password"
+  fromEmail: "noreply@yourdomain.com"
 
 # Tracing configuration  
 tracing:
-  jaegerEndpoint: "http://example.com/api/traces"
+  jaegerEndpoint: "http://jaeger.yournamespace.svc.cluster.local:14268/api/traces"
   serviceName: "browser-sandbox"
   enabled: true
 
 # Session secret
-sessionSecret: "session-secret-key"
+sessionSecret: "your-production-session-secret"
 
 # Frontend URL
-frontendUrl: "http://localhost:5173"
+frontendUrl: "https://yourdomain.com"
+
+# Note: When using external database, PostgreSQL-related values are ignored
+# as the internal PostgreSQL StatefulSet will not be deployed

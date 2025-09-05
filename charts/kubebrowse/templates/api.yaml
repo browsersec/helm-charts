@@ -26,7 +26,8 @@ spec:
             - name: GUACD_ADDRESS
               value: "guacd.{{ .Values.namespace }}.svc.cluster.local:4822"
             - name: DATABASE_URL
-              value: "postgres://{{ .Values.postgres.credentials.username }}:{{ .Values.postgres.credentials.password }}@postgres.{{ .Values.namespace }}.svc.cluster.local:5432/{{ .Values.postgres.credentials.database }}?sslmode=disable"
+              value: {{ ternary .Values.database.externalUrl (printf "postgres://%s:%s@postgres.%s.svc.cluster.local:5432/%s?sslmode=disable" .Values.postgres.credentials.username .Values.postgres.credentials.password .Values.namespace .Values.postgres.credentials.database) (eq .Values.database.type "external") | quote }}
+{{- if eq .Values.database.type "internal" }}
             - name: POSTGRES_HOST
               value: "postgres"
             - name: POSTGRES_PORT
@@ -43,6 +44,7 @@ spec:
                   key: password
             - name: POSTGRES_DB
               value: {{ .Values.postgres.credentials.database | quote }}
+{{- end }}
             - name: REDIS_HOST
               value: "redis.{{ .Values.namespace }}.svc.cluster.local"
             - name: REDIS_PORT
