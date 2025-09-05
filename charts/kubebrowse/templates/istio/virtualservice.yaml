@@ -1,0 +1,38 @@
+{{- if .Values.istio.enabled }}
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: browser-sandbox
+  namespace: {{ .Values.namespace }}
+spec:
+  hosts:
+    {{- range .Values.istio.gateway.hosts }}
+    - {{ . | quote }}
+    {{- end }}
+  gateways:
+    - {{ .Values.istio.gateway.name }}
+  http:
+    - match:
+        - headers:
+            ":authority":
+              exact: "api.example.com"
+      route:
+        - destination:
+            host: browser-sandbox-api
+            port:
+              number: {{ .Values.api.service.port }}
+    - match:
+        - headers:
+            ":authority":
+              exact: "app.example.com"
+      route:
+        - destination:
+            host: browser-sandbox-frontend
+            port:
+              number: {{ .Values.frontend.service.port }}
+    - route:  # Default route (fallback)
+        - destination:
+            host: browser-sandbox-frontend
+            port:
+              number: {{ .Values.frontend.service.port }}
+{{- end }}

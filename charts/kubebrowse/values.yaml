@@ -39,6 +39,18 @@ frontend:
     type: LoadBalancer
     port: 80
 
+# Istio Configuration
+istio:
+  enabled: true
+  gateway:
+    name: browser-sandbox-gateway
+    hosts:
+      - "api.example.com"      # API subdomain
+      - "app.example.com"      # Frontend subdomain
+    tls:
+      enabled: true
+      credentialName: browser-sandbox-cert
+
 # Database configuration
 database:
   # Set to 'internal' to use the internal PostgreSQL instance
