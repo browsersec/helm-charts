@@ -1,2 +1,2 @@
-values.yaml
-values-prod.yaml
+./values.yaml
+./values-prod.yaml
