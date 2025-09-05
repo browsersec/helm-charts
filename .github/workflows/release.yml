@@ -12,6 +12,9 @@ on:
       - 'values-prod.yaml'
       - 'templates/**'
 
+env:
+  CHART_NAME: kubebrowse
+
 jobs:
   release:
     permissions:
@@ -19,6 +22,9 @@ jobs:
       pages: write
       id-token: write
     runs-on: ubuntu-latest
+    outputs:
+      chart-version: ${{ steps.chart-version.outputs.version }}
+      version-changed: ${{ steps.version-check.outputs.changed }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -35,16 +41,54 @@ jobs:
         with:
           version: '3.14.0'
 
+      - name: Get Chart Version
+        id: chart-version
+        run: |
+          VERSION=$(helm show chart . | grep '^version:' | awk '{print $2}')
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Chart version: $VERSION"
+
+      - name: Validate Chart Version
+        run: |
+          chmod +x ./scripts/validate-version.sh
+          ./scripts/validate-version.sh
+
+      - name: Check if version changed
+        id: version-check
+        run: |
+          CURRENT_VERSION="${{ steps.chart-version.outputs.version }}"
+          
+          # Check if tag already exists
+          if git tag --list | grep -q "^v$CURRENT_VERSION$"; then
+            echo "Version $CURRENT_VERSION already exists as a tag"
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "New version detected: $CURRENT_VERSION"
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+
       - name: Lint Chart
-        run: helm lint .
+        run: |
+          helm lint .
+          echo "✅ Chart linting passed"
+
+      - name: Validate Chart Schema
+        run: |
+          helm template kubebrowse-ci . --namespace kubebrowse-ci-ns --set namespace=kubebrowse-ci-ns > /dev/null
+          echo "✅ Chart template validation passed"
 
       - name: Create packages directory
+        if: steps.version-check.outputs.changed == 'true'
         run: mkdir -p .cr-release-packages
 
       - name: Package Chart
-        run: helm package . -d .cr-release-packages
+        if: steps.version-check.outputs.changed == 'true'
+        run: |
+          helm package . -d .cr-release-packages
+          echo "✅ Chart packaged successfully"
 
       - name: Run chart-releaser
+        if: steps.version-check.outputs.changed == 'true'
         uses: helm/chart-releaser-action@v1.6.0
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
@@ -52,3 +96,22 @@ jobs:
           charts_dir: .
           config: cr.yaml
           skip_packaging: true
+
+      - name: Create Git Tag
+        if: steps.version-check.outputs.changed == 'true'
+        run: |
+          git tag "v${{ steps.chart-version.outputs.version }}"
+          git push origin "v${{ steps.chart-version.outputs.version }}"
+          echo "✅ Created and pushed tag v${{ steps.chart-version.outputs.version }}"
+
+  artifact-hub:
+    needs: release
+    if: needs.release.outputs.version-changed == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notify Artifact Hub
+        run: |
+          echo "🎉 Chart ${{ env.CHART_NAME }} version ${{ needs.release.outputs.chart-version }} released!"
+          echo "📦 Available at: https://browsersec.github.io/helm-charts"
+          echo "🐳 OCI: oci://ghcr.io/browsersec/charts/${{ env.CHART_NAME }}"
+          echo "🔍 Will be indexed by Artifact Hub automatically"

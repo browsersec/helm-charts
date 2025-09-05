@@ -1,0 +1,9 @@
+# Artifact Hub repository metadata file
+#
+# This file is used by Artifact Hub to index the repository
+# https://artifacthub.io/docs/topics/repositories/
+
+repositoryID: browsersec-helm-charts
+owners:
+  - name: BrowserSec Team
+    email: contact@browsersec.io

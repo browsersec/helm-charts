@@ -2,7 +2,7 @@ apiVersion: v2
 name: kubebrowse
 description: A Helm chart for KubeBrowse browser sandbox environment
 type: application
-version: 0.1.0
+version: 1.1.0
 appVersion: "1.0.0"
 home: https://github.com/browsersec/KubeBrowse
 sources:
@@ -18,5 +18,39 @@ keywords:
   - security
   - remote-desktop
   - guacamole
+  - isolation
+  - web-browser
 annotations:
   category: Security
+  # Artifact Hub specific annotations
+  artifacthub.io/license: MIT
+  artifacthub.io/operator: "false"
+  artifacthub.io/prerelease: "false"
+  artifacthub.io/containsSecurityUpdates: "false"
+  artifacthub.io/changes: |
+    - kind: changed
+      description: Updated Helm chart with improved CI/CD workflows
+    - kind: added
+      description: Added comprehensive Artifact Hub integration
+    - kind: added
+      description: Improved chart validation and testing scripts
+    - kind: changed
+      description: Enhanced GitHub Actions workflows for better releases
+  artifacthub.io/images: |
+    - name: guacamole-guacd
+      image: guacamole/guacd:1.5.0
+    - name: guacamole-client
+      image: guacamole/guacamole:1.5.0
+    - name: postgres
+      image: postgres:15
+    - name: redis
+      image: redis:7-alpine
+    - name: minio
+      image: minio/minio:RELEASE.2023-09-04T19-57-37Z
+  artifacthub.io/links: |
+    - name: Chart Source
+      url: https://github.com/browsersec/helm-charts
+    - name: KubeBrowse Project
+      url: https://github.com/browsersec/KubeBrowse
+    - name: Documentation
+      url: https://github.com/browsersec/KubeBrowse/blob/main/README.md

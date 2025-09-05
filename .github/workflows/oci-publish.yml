@@ -1,9 +1,16 @@
 name: Publish to OCI Registry
 
 on:
+  # This workflow is now triggered by the release workflow
+  # when a new version is tagged, or manually
+  workflow_dispatch:
   push:
     tags:
       - 'v*'
+
+env:
+  REGISTRY: ghcr.io
+  CHART_NAME: kubebrowse
 
 jobs:
   publish-oci:
@@ -20,13 +27,34 @@ jobs:
         with:
           version: '3.14.0'
 
+      - name: Get Chart Version
+        id: chart-version
+        run: |
+          VERSION=$(helm show chart . | grep '^version:' | awk '{print $2}')
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Chart version: $VERSION"
+
       - name: Lint Chart
-        run: helm lint .
+        run: |
+          helm lint .
+          echo "✅ Chart linting passed"
+
+      - name: Validate Chart Template
+        run: |
+          helm template . --validate
+          echo "✅ Chart template validation passed"
 
       - name: Login to GitHub Container Registry
-        run: echo ${{ secrets.GITHUB_TOKEN }} | helm registry login ghcr.io -u ${{ github.actor }} --password-stdin
+        run: echo ${{ secrets.GITHUB_TOKEN }} | helm registry login ${{ env.REGISTRY }} -u ${{ github.actor }} --password-stdin
 
       - name: Package and Push Chart
         run: |
           helm package .
-          helm push kubebrowse-*.tgz oci://ghcr.io/browsersec/charts
+          helm push ${{ env.CHART_NAME }}-${{ steps.chart-version.outputs.version }}.tgz oci://${{ env.REGISTRY }}/browsersec/charts
+          echo "✅ Chart published to OCI registry"
+          echo "📦 Available at: oci://${{ env.REGISTRY }}/browsersec/charts/${{ env.CHART_NAME }}"
+
+      - name: Verify Published Chart
+        run: |
+          helm pull oci://${{ env.REGISTRY }}/browsersec/charts/${{ env.CHART_NAME }} --version ${{ steps.chart-version.outputs.version }} --verify
+          echo "✅ Published chart verification completed"
