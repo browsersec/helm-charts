@@ -1,0 +1,136 @@
+# Global settings
+namespace: browser-sandbox
+environment: development
+
+# API configuration
+api:
+  image:
+    repository: ghcr.io/browsersec/kubebrowse
+    tag: sha-09dfa1f
+    pullPolicy: IfNotPresent
+  replicas: 1
+  resources:
+    requests:
+      memory: "64Mi"
+      cpu: "100m"
+    limits:
+      memory: "128Mi"
+      cpu: "200m"
+  service:
+    type: NodePort
+    port: 4567
+    nodePort: 30006
+
+# Frontend configuration
+frontend:
+  image:
+    repository: ghcr.io/browsersec/kubebrowse-frontend
+    tag: chore-improve-back
+    pullPolicy: IfNotPresent
+  replicas: 2
+  resources:
+    requests:
+      memory: "128Mi"
+      cpu: "100m"
+    limits:
+      memory: "256Mi"
+      cpu: "200m"
+  service:
+    type: LoadBalancer
+    port: 80
+
+# PostgreSQL configuration
+postgres:
+  image:
+    repository: postgres
+    tag: "15"
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "100m"
+    limits:
+      memory: "1Gi"
+      cpu: "500m"
+  storage: 10Gi
+  credentials:
+    username: postgresuser
+    password: postgrespassword
+    database: sandbox_db
+
+# Redis configuration
+redis:
+  image:
+    repository: redis
+    tag: alpine
+  replicas: 1
+  resources:
+    requests:
+      memory: "128Mi"
+      cpu: "100m"
+    limits:
+      memory: "256Mi"
+      cpu: "200m"
+
+# Guacamole daemon configuration
+guacd:
+  image:
+    repository: guacamole/guacd
+    tag: latest
+  replicas: 2
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "100m"
+    limits:
+      memory: "512Mi"
+      cpu: "500m"
+
+# MinIO configuration
+minio:
+  image:
+    repository: minio/minio
+    tag: latest
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "100m"
+    limits:
+      memory: "512Mi"
+      cpu: "300m"
+  storage: 10Gi
+  credentials:
+    accessKey: minioaccesskey
+    secretKey: miniosecretkey
+    bucket: browser-sandbox
+
+# Session configuration
+sessionTimeouts:
+  podSessionTimeout: 10
+  podSessionTTL: 6
+
+# OAuth configuration
+oauth:
+  github:
+    clientId: "client-id"
+    clientSecret: "client-secret"
+    callbackUrl: "https://localhost:4567/auth/oauth/github/callback"
+
+# SMTP configuration
+smtp:
+  host: "smtp.gmail.com"
+  port: "587"
+  username: "example@gmail.com"
+  password: "yourpassword"
+  fromEmail: "example@gmail.com"
+
+# Tracing configuration  
+tracing:
+  jaegerEndpoint: "http://example.com/api/traces"
+  serviceName: "browser-sandbox"
+  enabled: true
+
+# Session secret
+sessionSecret: "session-secret-key"
+
+# Frontend URL
+frontendUrl: "http://localhost:5173"
