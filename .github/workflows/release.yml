@@ -33,10 +33,17 @@ jobs:
         with:
           version: '3.14.0'
 
-      - name: Add dependencies
-        run: helm dependency update
+      - name: Lint Chart
+        run: helm lint .
+
+      - name: Package Chart
+        run: helm package .
 
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.6.0
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+        with:
+          charts_dir: .
+          config: cr.yaml
+          skip_packaging: true
