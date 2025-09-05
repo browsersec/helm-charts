@@ -1,0 +1,63 @@
+apiVersion: v1
+entries:
+  kubebrowse:
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
+          description: Updated Helm chart with improved CI/CD workflows
+        - kind: added
+          description: Added comprehensive Artifact Hub integration
+        - kind: added
+          description: Improved chart validation and testing scripts
+        - kind: changed
+          description: Enhanced GitHub Actions workflows for better releases
+      artifacthub.io/containsSecurityUpdates: "false"
+      artifacthub.io/images: |
+        - name: guacamole-guacd
+          image: guacamole/guacd:1.5.0
+        - name: guacamole-client
+          image: guacamole/guacamole:1.5.0
+        - name: postgres
+          image: postgres:15
+        - name: redis
+          image: redis:7-alpine
+        - name: minio
+          image: minio/minio:RELEASE.2023-09-04T19-57-37Z
+      artifacthub.io/license: MIT
+      artifacthub.io/links: |-
+        - name: Chart Source
+          url: https://github.com/browsersec/helm-charts
+        - name: KubeBrowse Project
+          url: https://github.com/browsersec/KubeBrowse
+        - name: Documentation
+          url: https://github.com/browsersec/KubeBrowse/blob/main/README.md
+      artifacthub.io/operator: "false"
+      artifacthub.io/prerelease: "false"
+      category: Security
+    apiVersion: v2
+    appVersion: 1.0.0
+    created: "2025-09-05T16:24:18.379368351Z"
+    description: A Helm chart for KubeBrowse browser sandbox environment
+    digest: 9ddded047a066e6f48c20075ee9906953bbed433a2df2e4f3b8505afc9d1026c
+    home: https://github.com/browsersec/KubeBrowse
+    keywords:
+    - browser
+    - sandbox
+    - security
+    - remote-desktop
+    - guacamole
+    - isolation
+    - web-browser
+    maintainers:
+    - email: contact@browsersec.io
+      name: browsersec
+      url: https://github.com/browsersec/KubeBrowse
+    name: kubebrowse
+    sources:
+    - https://github.com/browsersec/helm-charts
+    - https://github.com/browsersec/KubeBrowse
+    type: application
+    urls:
+    - https://github.com/browsersec/helm-charts/releases/download/kubebrowse-1.2.0/kubebrowse-1.2.0.tgz
+    version: 1.2.0
+generated: "2025-09-05T16:24:18.379374713Z"
