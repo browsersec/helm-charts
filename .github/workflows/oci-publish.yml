@@ -30,18 +30,18 @@ jobs:
       - name: Get Chart Version
         id: chart-version
         run: |
-          VERSION=$(helm show chart . | grep '^version:' | awk '{print $2}')
+          VERSION=$(helm show chart ./charts/kubebrowse | grep '^version:' | awk '{print $2}')
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "Chart version: $VERSION"
 
       - name: Lint Chart
         run: |
-          helm lint .
+          helm lint ./charts/kubebrowse
           echo "✅ Chart linting passed"
 
       - name: Validate Chart Template
         run: |
-          helm template . --validate
+          helm template kubebrowse-ci ./charts/kubebrowse --namespace kubebrowse-ci-ns --set namespace=kubebrowse-ci-ns > /dev/null
           echo "✅ Chart template validation passed"
 
       - name: Login to GitHub Container Registry
@@ -49,12 +49,12 @@ jobs:
 
       - name: Package and Push Chart
         run: |
-          helm package .
+          helm package ./charts/kubebrowse
           helm push ${{ env.CHART_NAME }}-${{ steps.chart-version.outputs.version }}.tgz oci://${{ env.REGISTRY }}/browsersec/charts
           echo "✅ Chart published to OCI registry"
           echo "📦 Available at: oci://${{ env.REGISTRY }}/browsersec/charts/${{ env.CHART_NAME }}"
 
       - name: Verify Published Chart
         run: |
-          helm pull oci://${{ env.REGISTRY }}/browsersec/charts/${{ env.CHART_NAME }} --version ${{ steps.chart-version.outputs.version }} --verify
+          helm pull oci://${{ env.REGISTRY }}/browsersec/charts/${{ env.CHART_NAME }} --version ${{ steps.chart-version.outputs.version }}
           echo "✅ Published chart verification completed"

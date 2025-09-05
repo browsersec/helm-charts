@@ -5,11 +5,11 @@ package-path: .cr-release-packages
 pages-branch: gh-pages
 remote: origin
 index-path: index.yaml
-# Generate index.yaml with proper metadata for Artifact Hub
+# Tag name template for git tags (defaults to "v{{ .Version }}")
+# Release name template - use default which is "{{ .Name }}-{{ .Version }}"
+# Generate index.yaml with proper metadata for Artifact Hub  
 generate-release-notes: true
 # Mark charts as signed (optional, set to false if not using chart signing)
 sign: false
-# Release name template
-release-name-template: "Release {{ .Version }}"
 # Commit message template for updating index
 commit-msg: "Update Helm repository index"

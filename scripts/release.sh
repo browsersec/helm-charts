@@ -10,7 +10,8 @@ if [[ $# -ne 1 ]]; then
 fi
 
 NEW_VERSION="$1"
-CHART_FILE="Chart.yaml"
+CHART_DIR="./charts/kubebrowse"
+CHART_FILE="$CHART_DIR/Chart.yaml"
 
 # Validate version format
 if ! [[ $NEW_VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9]+)?$ ]]; then

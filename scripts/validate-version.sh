@@ -4,7 +4,8 @@ set -euo pipefail
 # Script to validate chart version follows semantic versioning
 # and is greater than the previous version
 
-CHART_VERSION=$(helm show chart . | grep '^version:' | awk '{print $2}')
+CHART_DIR="./charts/kubebrowse"
+CHART_VERSION=$(helm show chart $CHART_DIR | grep '^version:' | awk '{print $2}')
 echo "Current chart version: $CHART_VERSION"
 
 # Validate semantic versioning format

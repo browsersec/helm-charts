@@ -3,6 +3,8 @@ set -euo pipefail
 
 # Script to test the Helm chart locally before releasing
 
+CHART_DIR="./charts/kubebrowse"
+
 echo "🧪 Testing KubeBrowse Helm Chart"
 echo "================================"
 
@@ -18,7 +20,7 @@ echo "✅ Helm is installed: $(helm version --short)"
 # Lint the chart
 echo ""
 echo "🔍 Linting chart..."
-if helm lint .; then
+if helm lint $CHART_DIR; then
     echo "✅ Chart linting passed"
 else
     echo "❌ Chart linting failed"
@@ -28,7 +30,7 @@ fi
 # Validate chart templates
 echo ""
 echo "📝 Validating chart templates..."
-if helm template kubebrowse-test . --namespace kubebrowse-test-ns > /dev/null; then
+if helm template kubebrowse-test $CHART_DIR --namespace kubebrowse-test-ns --set namespace=kubebrowse-test-ns > /dev/null; then
     echo "✅ Chart template validation passed"
 else
     echo "❌ Chart template validation failed"
@@ -38,7 +40,7 @@ fi
 # Test chart installation with dry-run
 echo ""
 echo "🚀 Testing chart installation (dry-run)..."
-if helm install kubebrowse-test . --dry-run --namespace kubebrowse-test-ns --create-namespace --set namespace=kubebrowse-test-ns > /dev/null; then
+if helm install kubebrowse-test $CHART_DIR --dry-run --namespace kubebrowse-test-ns --create-namespace --set namespace=kubebrowse-test-ns > /dev/null; then
     echo "✅ Chart installation test passed"
 else
     echo "❌ Chart installation test failed"
@@ -59,15 +61,15 @@ fi
 echo ""
 echo "📁 Checking required files..."
 REQUIRED_FILES=(
-    "Chart.yaml"
-    "values.yaml" 
-    "templates/namespace.yaml"
-    "templates/postgres.yaml"
-    "templates/redis.yaml"
-    "templates/minio.yaml"
-    "templates/guacd.yaml"
-    "templates/api.yaml"
-    "templates/frontend.yaml"
+    "$CHART_DIR/Chart.yaml"
+    "$CHART_DIR/values.yaml" 
+    "$CHART_DIR/templates/namespace.yaml"
+    "$CHART_DIR/templates/postgres.yaml"
+    "$CHART_DIR/templates/redis.yaml"
+    "$CHART_DIR/templates/minio.yaml"
+    "$CHART_DIR/templates/guacd.yaml"
+    "$CHART_DIR/templates/api.yaml"
+    "$CHART_DIR/templates/frontend.yaml"
 )
 
 for file in "${REQUIRED_FILES[@]}"; do
@@ -83,7 +85,7 @@ echo ""
 echo "🎉 All tests passed! Chart is ready for release."
 echo ""
 echo "📦 Chart Info:"
-helm show chart . | grep -E "^(name|version|appVersion|description):"
+helm show chart $CHART_DIR | grep -E "^(name|version|appVersion|description):"
 
 echo ""
 echo "🚀 To release this version:"
